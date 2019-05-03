@@ -25,6 +25,6 @@ public class TryCatchTest {
     public static void main(String[] args) throws FileNotFoundException{
         TryCatchTest inputFile = new TryCatchTest("data.txt");
         inputFile.readLine();
-        System.out.println("성공적?")
+        System.out.println("성공적?");
     }
 }
