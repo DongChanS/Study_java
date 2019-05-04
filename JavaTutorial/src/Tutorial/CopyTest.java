@@ -22,6 +22,5 @@ public class CopyTest {
         } catch (IOException e){
             e.printStackTrace();
         }
-
     }
 }
