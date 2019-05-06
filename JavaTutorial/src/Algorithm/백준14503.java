@@ -3,35 +3,9 @@ import java.io.*;
 import java.util.StringTokenizer;
 import java.util.Arrays;
 
-/*
-목적
-    - 청소하는 영역의 개수
-장소
-    - N*M 크기
-    - 벽 또는 빈칸
-청소기
-    - 방향 (동서남북)
-청소
-    1. 현재 위치를 청소
-    2. [현재 방향을 기준으로] 왼쪽방향부터 탐색을 진행
-        A. 아직 청소안한 공간이 존재
-            => 그 방향으로 회전
-            => 한칸 전진
-            => 1번
-        B. 왼쪽 방향에 청소할 공간이 없다면
-            => 그 방향으로 회전
-            => 2번
-        C. 네 방향 모두가 청소되어있거나, 벽
-            => 방향 유지
-            => 한칸 후진
-            => 2번
-        D. 네 방향 모두가 청소되어있거나, 벽 & 후진 불가능
-            => 중단
- */
-
 public class 백준14503 {
     static int[] move_x = {0, 1, 0, -1};
-    static int[] move_y = {1, 0, -1, 0};
+    static int[] move_y = {-1, 0, 1, 0};
     static int N, M, rx, ry, d, res;
     static int[][] cleaned, room;
     // 북 동 남 서
@@ -41,42 +15,60 @@ public class 백준14503 {
         남 => 동
         서 => 남
      */
-    static boolean inRoom(int y, int x){
-        if (0 <= x && x < N && 0 <= y && y < N) return false;
-        return true;
+    static boolean isWall(int y, int x){
+        if (0 <= x && x < M && 0 <= y && y < N) {
+            return (room[y][x] == 1);
+        } return true;
     }
     static int leftDir(int d){return (d+3) % 4;}
+
+    static boolean allCleaned(int y, int x){
+        int rx, ry;
+        int cnt = 0;
+        for (int i = 0; i < 4; i ++){
+            rx = x + move_x[i];
+            ry = y + move_y[i];
+            if ( isWall(ry, rx) || cleaned[ry][rx] >= 1 ){
+                cnt += 1;
+            }
+        }
+        return (cnt == 4);
+    }
+
     static boolean canBackGo(int y, int x, int d){
-        if (inRoom(y-move_y[d], x-move_x[d])) return true;
+        if (!isWall(y-move_y[d], x-move_x[d])) return true;
         return false;
     }
-    static void clean(int y, int x, int d){
+    static void clean(int y, int x, int d, boolean flag){
+//        System.out.printf("%d, %d, %d, %d, \n", y, x, d, res);
         // 현재 위치를 청소하기
-        if (cleaned[y][x] == 0 && room[y][x] == 0){
-            cleaned[y][x] = 1;
+        if (flag) {
             res += 1;
+            cleaned[y][x] = res;
         }
         int rx, ry, rd;
-        // 왼쪽방향부터 탐색을 진행
-        for (int i=0; i<4; i++){
-            rd = leftDir(d);
-            rx = x + move_x[rd];
-            ry = y + move_y[rd];
-
-            if (inRoom(ry, rx) && room[ry][rx] == 0) {
-                if (cleaned[ry][rx] == 0){
-                    clean(ry, rx, rd);
-                } else {
-                    clean(y, x, rd);
-                }
-                break;
+        if (allCleaned(y, x)){
+            // 후진이 가능한지 확인
+            if (canBackGo(y, x, d)){
+                clean(y-move_y[d], x-move_x[d], d, false);
             }
-            d = rd;
-        }
-        // 4번 바꾸니까 원래방향으로 되돌아왔음.
-        // 후진이 가능한지 확인
-        if (canBackGo(y, x, d)){
-            clean(y-move_y[d], x-move_x[d], d);
+        } else {
+            // 왼쪽방향부터 탐색을 진행
+            for (int i=0; i<4; i++){
+                rd = leftDir(d);
+                rx = x + move_x[rd];
+                ry = y + move_y[rd];
+
+                if (!isWall(ry, rx)) {
+                    if (cleaned[ry][rx] == 0){
+                        clean(ry, rx, rd, true);
+                    } else {
+                        clean(y, x, rd, false);
+                    }
+                    break;
+                }
+                d = rd;
+            }
         }
     }
 
@@ -89,7 +81,7 @@ public class 백준14503 {
         N = Integer.parseInt(st.nextToken());
         M = Integer.parseInt(st.nextToken());
         room = new int[N][M];
-        cleaned = new int[N][N];
+        cleaned = new int[N][M];
         st = new StringTokenizer(br.readLine());
         ry = Integer.parseInt(st.nextToken());
         rx = Integer.parseInt(st.nextToken());
@@ -102,7 +94,10 @@ public class 백준14503 {
             }
         }
         // 청소 시작!
-        clean(ry, rx, d);
+        clean(ry, rx, d, true);
+//        for (int i=0; i<N; i++){
+//            System.out.println(Arrays.toString(cleaned[i]));
+//        }
         System.out.println(res);
     }
 }
