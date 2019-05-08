@@ -27,35 +27,35 @@ public class SWEA4014 {
     static int T, N, X, res;
     static int[][] map;
 
-    public static void main(String[] args) throws IOException {
-        String path = "swea" + File.separator + "4014_input.txt";
-        BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(path)));
-
-        T = Integer.parseInt(br.readLine());
-        for (int i=0; i<T; i++){
-            // take input
-            StringTokenizer st = new StringTokenizer(br.readLine());
-            N = Integer.parseInt(st.nextToken());
-            X = Integer.parseInt(st.nextToken());
-            for (int j=0; j<N; j++){
-                st = new StringTokenizer(br.readLine());
-                for (int k=0; k<N; k++){
-                    map[j][k] = Integer.parseInt(st.nextToken());
-                }
-                // 각 row 를 판단하는 함수
-                determine(map[j]);
-            }
-
-            int[] temp = new int[N];
-            for (int k=0; k<N; k++){
-                for (int j=0; j<N; j++){
-                    temp[j] = map[j][k];
-                }
-                determine(temp);
-            }
-
-            System.out.println(res);
-        }
-
-    }
+//    public static void main(String[] args) throws IOException {
+//        String path = "swea" + File.separator + "4014_input.txt";
+//        BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(path)));
+//
+//        T = Integer.parseInt(br.readLine());
+//        for (int i=0; i<T; i++){
+//            // take input
+//            StringTokenizer st = new StringTokenizer(br.readLine());
+//            N = Integer.parseInt(st.nextToken());
+//            X = Integer.parseInt(st.nextToken());
+//            for (int j=0; j<N; j++){
+//                st = new StringTokenizer(br.readLine());
+//                for (int k=0; k<N; k++){
+//                    map[j][k] = Integer.parseInt(st.nextToken());
+//                }
+//                // 각 row 를 판단하는 함수
+//                determine(map[j]);
+//            }
+//
+//            int[] temp = new int[N];
+//            for (int k=0; k<N; k++){
+//                for (int j=0; j<N; j++){
+//                    temp[j] = map[j][k];
+//                }
+//                determine(temp);
+//            }
+//
+//            System.out.println(res);
+//        }
+//
+//    }
 }
